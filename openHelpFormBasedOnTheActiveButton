@@ -1,0 +1,36 @@
+Private Sub cmdHelp_Click()
+    'Open the Help form based on the active NavigationButton
+    
+    Dim navigationFormSourceObject As String
+    
+    navigationFormSourceObject = Me.NavigationSubform.SourceObject
+    
+    Select Case navigationFormSourceObject
+    Case "PRODUCTS"
+        DoCmd.OpenForm "Help Products"
+    Case "SALES"
+        DoCmd.OpenForm "Help Sales"
+    Case "CUSTOMERS"
+        DoCmd.OpenForm "Help Customers"
+    Case "EXPENSES"
+        DoCmd.OpenForm "Help Expenses"
+    Case "DEPOSITS"
+        DoCmd.OpenForm "Help Deposits"
+    Case "DAMAGES"
+        DoCmd.OpenForm "Help Damages"
+    Case "EMPLOYEES"
+        DoCmd.OpenForm "Help Employees"
+    Case "ATTENDANCE"
+        DoCmd.OpenForm "Help Attendance"
+    Case "SALARY"
+        DoCmd.OpenForm "Help Salary"
+    Case "REPAIRS"
+        DoCmd.OpenForm "Help Repairs"
+    Case "RETAILERS"
+        DoCmd.OpenForm "Help Retailers"
+    Case "SUPPLIERS"
+        DoCmd.OpenForm "Help Suppliers"
+    Case Else
+        MsgBox "Please click on the button you want to get help on.", vbOKOnly + vbInformation, "Invalid Help Search"
+    End Select
+End Sub
