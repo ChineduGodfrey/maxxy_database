@@ -1,0 +1,6 @@
+Private Sub cmdBackUp_Click()
+    Dim myTarget As String, myDesignation As String
+    myTarget = "C:\Users\DELL\Desktop\Academics\backUpFiles_On_"
+    myDesignation = "C:\Users\DELL\Desktop\Academics"
+    Call backUpDatabase(CurrentDb.Name, myTarget, myDesignation)
+End Sub
