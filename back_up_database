@@ -1,0 +1,58 @@
+Public Sub backUpDatabase(source As String, target As String, Optional myDesignatedFolder As String)
+    'this sub can be used to back up databases, currentdatabase and external access database.
+    
+    'In this sub, source is the database you want to backup. A string representation of the database path and its name
+    'E.g "C:\Users\INSPIRON\databaseBoutiqueman\boutiqueman\dbAssets.accdb" or currentdB.Name
+    
+    'The target is the string representation of the name you wish to give your newly backed up database
+    'E.g "C:\Users\INSPIRON\Documents\DatabaseBackup\multipleDatabases\multipleDatabasesAssets_On_" & Format(Date, "dd-mm") & ".accdb"
+    
+    'Lastly the optional myDesignationFolder is the folder you wish to save the newly backed up files
+    'E.g "C:\Users\INSPIRON\Documents\DatabaseBackup\multipleDatabases"
+    
+    'Note the connection between the target and myDesignationFolder
+    'If myDesignationFolder is provided, this sub will open the folder automatically after backup
+    
+    'declare variables
+    Dim db As DAO.Database, sourceName As String, objFSO As Object, retVal As Integer
+    Dim myCurrentDb As DAO.Database, myCurrentDbName As String
+    Dim lDbExtension As Long, lDbLength As Long, strDbName As String, lDbNameBeginPoint As Long
+    
+    Set myCurrentDb = CurrentDb
+    myCurrentDbName = myCurrentDb.Name
+    
+    'check if it is currentdB or externaldB and assign the database name to sourceName accordingly
+    If source = myCurrentDbName Then
+        sourceName = myCurrentDbName
+    Else
+        Set db = OpenDatabase(source)
+        sourceName = db.Name
+    End If
+    
+    'remove the .accdb extension from the sourceName
+    lDbExtension = InStr(myCurrentDbName, ".accdb")
+    lDbNameBeginPoint = InStrRev(myCurrentDbName, "\")
+    strDbName = Mid(sourceName, lDbNameBeginPoint + 1, lDbExtension)
+    
+    Dim lNewExtensionPosition As Long, strNeededName As String
+    lNewExtensionPosition = InStrRev(strDbName, ".")
+    strNeededName = Left(strDbName, lNewExtensionPosition - 1)
+    
+    'name the backed up database based on the current date
+    target = target & Format(Date, "dd-mm-yy") & "_" & strNeededName & ".accdb"
+    
+    'initiate the retVal and start the back up. Assign the copied file to retVal.
+    retVal = 0
+    Set objFSO = CreateObject("Scripting.FileSystemObject")
+    
+    retVal = objFSO.copyfile(sourceName, target, True)
+    
+    Set objFSO = Nothing
+    Set db = Nothing
+    
+    'open the just backed up databases
+    If Not IsNull(myDesignatedFolder) Then
+        Application.FollowHyperlink myDesignatedFolder
+    End If
+    
+End Sub
