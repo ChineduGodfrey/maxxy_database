@@ -1,0 +1,108 @@
+Option Compare Database
+Option Explicit
+Public Sub selectButton(ctrl As Control)
+    
+        Dim frmName As String
+        Dim frmCaption As String
+  
+         Select Case ctrl.Caption
+            Case "   Add New" 'Add new repairers
+                frmName = "AddRepairsSubform"
+            Case "  Edit"      'Edit repairers
+                frmName = "EditRepairsForm"
+            Case "  Delete"      'delete repairers
+                frmName = "DeleteRepairsForm"
+            Case "  View"      'view repairers
+                frmName = "ViewRepairsForm"
+            Case "  Repairs By Date"      'Print repairs by date
+                frmName = "repairsByDateForm"
+            Case "  Repair Invoice"      'Invoice for repairers
+                frmName = "RepairsInvoiceForm"
+            Case "  Repairs By Single Customer"      'repairs by single customer
+                frmName = "RepairsBySingleCustomer"
+            Case "  Debtors"      'Show debtors
+                frmName = "Repairs Debtors Form"
+        End Select
+        
+        Me!repairsMainSubform.SourceObject = frmName
+        If ctrl.Tag = "repairs" Then
+            Me.mainLbl.Caption = ctrl.Caption & " " & "(Repairs)"
+        ElseIf ctrl.Tag = "report" Then
+            Me.mainLbl.Caption = ctrl.Caption & " " & "(Report)"
+        End If
+        Me.Refresh
+        Me!repairsMainSubform.SetFocus
+        
+End Sub
+
+Private Sub cmdAddNew_Click()
+    DoCmd.OpenForm "AddNewRepairsForm"
+    Call selectButton(cmdAddNew)
+End Sub
+
+Private Sub cmdAddNew_Enter()
+    Call pCheckEmployeeAccess("addRecords")
+End Sub
+
+Private Sub cmdDebors_Enter()
+    Call pCheckEmployeeAccess("viewDebtors")
+End Sub
+
+Private Sub cmdDebtors_Click()
+    Call selectButton(cmdDebtors)
+End Sub
+
+Private Sub cmdDelete_Click()
+    Call selectButton(cmdDelete)
+End Sub
+
+Private Sub cmdDelete_Enter()
+    Call pCheckEmployeeAccess("deleteRecords")
+End Sub
+
+Private Sub cmdEdit_Click()
+    Call selectButton(cmdEdit)
+End Sub
+
+Private Sub cmdEdit_Enter()
+    Call pCheckEmployeeAccess("editRecords")
+End Sub
+
+Private Sub cmdInvoice_Click()
+    Call selectButton(cmdInvoice)
+End Sub
+
+Private Sub cmdInvoice_Enter()
+    Call pCheckEmployeeAccess("printInvoice")
+End Sub
+
+Private Sub cmdRefresh_Click()
+    If Me!repairsMainSubform.SourceObject = "" Then
+        Exit Sub
+    End If
+    Me!repairsMainSubform.Form.Requery
+End Sub
+
+Private Sub cmdRepairsBySingleCustomer_Click()
+    Call selectButton(cmdRepairsBySingleCustomer)
+End Sub
+
+Private Sub cmdRepairsBySingleCustomer_Enter()
+    Call pCheckEmployeeAccess("printReports")
+End Sub
+
+Private Sub cmdRetailersSalesByDate_Click()
+    Call selectButton(cmdRetailersSalesByDate)
+End Sub
+
+Private Sub cmdRetailersSalesByDate_Enter()
+    Call pCheckEmployeeAccess("printReports")
+End Sub
+
+Private Sub cmdView_Click()
+    Call selectButton(cmdView)
+End Sub
+
+Private Sub cmdView_Enter()
+    Call pCheckEmployeeAccess("viewRecords")
+End Sub
