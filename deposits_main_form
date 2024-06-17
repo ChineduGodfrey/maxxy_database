@@ -1,0 +1,110 @@
+Option Compare Database
+Option Explicit
+Public Sub selectButton(ctrl As Control)
+    
+        Dim frmName As String
+        Dim frmCaption As String
+  
+         Select Case ctrl.Caption
+            Case "   Add New" 'Add new deposits
+                frmName = "AddDepositsSubform"
+            Case "  Pay Balance"      'pay balance
+                frmName = "PayBalanceSubform"
+            Case "  Edit"      'edit deposits
+                frmName = "EditDepositsForm"
+            Case "  Delete"      'delete deposits
+                frmName = "DeleteDepositsForm"
+            Case "  View"      'view deposits
+                frmName = "ViewDepositsForm"
+            Case "  Print"      'Print deposits
+                frmName = "PrintDepositsForm"
+            Case "  Debtors"      'Show debtors
+                frmName = "Debtors Form"
+            Case "  Deposit History"      'Deposit History
+                frmName = "PrintCustomerDepositHistory"
+        End Select
+        
+        Me!depositsMainSubform.SourceObject = frmName
+        If ctrl.Tag = "deposits" Then
+            Me.mainLbl.Caption = ctrl.Caption & " " & "(Deposits)"
+        Else
+            Me.mainLbl.Caption = ctrl.Caption & " " & "(Report)"
+        End If
+        Me.Refresh
+        Me.depositsMainSubform.SetFocus
+        
+End Sub
+
+Private Sub cmdAddNew_Click()
+    DoCmd.OpenForm "AddNewDepositsPopUpForm"
+    Call selectButton(cmdAddNew)
+End Sub
+
+Private Sub cmdAddNew_Enter()
+    Call pCheckEmployeeAccess("addRecords")
+End Sub
+
+Private Sub cmdDebtors_Click()
+   Call selectButton(cmdDebtors)
+End Sub
+
+Private Sub cmdDebtors_Enter()
+    Call pCheckEmployeeAccess("viewDebtors")
+End Sub
+
+Private Sub cmdDelete_Enter()
+    Call pCheckEmployeeAccess("deleteRecords")
+End Sub
+
+Private Sub cmdDepositHistory_Click()
+    Call selectButton(cmdDepositHistory)
+End Sub
+
+Private Sub cmdDepositHistory_Enter()
+    Call pCheckEmployeeAccess("printReports")
+End Sub
+
+Private Sub cmdEdit_Enter()
+    Call pCheckEmployeeAccess("editRecords")
+End Sub
+
+Private Sub cmdPayBalance_Click()
+    DoCmd.OpenForm "PayBalanceForm"
+    Call selectButton(cmdPayBalance)
+End Sub
+
+Private Sub cmdDelete_Click()
+    Call selectButton(cmdDelete)
+End Sub
+
+Private Sub cmdEdit_Click()
+    Call selectButton(cmdEdit)
+End Sub
+
+Private Sub cmdPayBalance_Enter()
+    Call pCheckEmployeeAccess("addRecords")
+End Sub
+
+Private Sub cmdPrintDeposits_Click()
+    Call selectButton(cmdPrintDeposits)
+End Sub
+
+Private Sub cmdPrintDeposits_Enter()
+    Call pCheckEmployeeAccess("printReports")
+End Sub
+
+Private Sub cmdRefresh_Click()
+    If Me.depositsMainSubform.SourceObject = "" Then
+        Exit Sub
+    End If
+    Me.depositsMainSubform.Form.Requery
+End Sub
+
+
+Private Sub cmdView_Click()
+    Call selectButton(cmdView)
+End Sub
+
+Private Sub cmdView_Enter()
+    Call pCheckEmployeeAccess("viewRecords")
+End Sub
