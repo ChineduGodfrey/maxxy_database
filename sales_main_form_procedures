@@ -1,0 +1,120 @@
+Option Compare Database
+Option Explicit
+Public Sub selectButton(ctrl As Control)
+    
+        Dim frmName As String
+        Dim frmCaption As String
+  
+         Select Case ctrl.Caption
+            Case "  Add New" 'Add new sales
+                frmName = "AddSalesSubform"
+            Case "  Edit"      'Edit sales
+                frmName = "EditSalesForm"
+            Case "  Delete"      'delete sales
+                frmName = "DeleteSalesForm"
+            Case "  View"      'Available products
+                frmName = "ViewSalesForm"
+            Case "  With Customer ID"      'Invoice with customer ID
+                frmName = "WithCustomerIdForm"
+            Case "  Without Customer ID"      'Print invoice without customer ID
+                frmName = "WithoutCustomerIdForm"
+            Case "  Profit"      'View or print profit
+                frmName = "ProfitForm"
+            Case "  Sales By Date"      'View or print sales by date
+                frmName = "SalesByDateForm"
+            Case "  Customer Purchases"      'View or print all customer purchases
+                frmName = "customerPurchases"
+        End Select
+        
+        Me!salesMainSubform.SourceObject = frmName
+        If ctrl.Tag = "sales" Then
+            Me.mainLbl.Caption = ctrl.Caption & " " & "(Sales)"
+        ElseIf ctrl.Tag = "reports" Then
+            Me.mainLbl.Caption = ctrl.Caption & " " & "(Report)"
+        ElseIf ctrl.Tag = "invoice" Then
+            Me.mainLbl.Caption = ctrl.Caption & " " & "(Invoice)"
+        End If
+        Me.Refresh
+        Me.salesMainSubform.SetFocus
+        
+End Sub
+
+Private Sub cmdAddNew_Click()
+    Call selectButton(cmdAddNew)
+    DoCmd.OpenForm "AddNewSalesForm"
+End Sub
+
+Private Sub cmdAddNew_Enter()
+    Call pCheckEmployeeAccess("addRecords")
+End Sub
+
+Private Sub cmdCustomerPurchases_Click()
+    Call selectButton(cmdCustomerPurchases)
+End Sub
+
+Private Sub cmdCustomerPurchases_Enter()
+    Call pCheckEmployeeAccess("printReports")
+End Sub
+
+Private Sub cmdDelete_Click()
+    Call selectButton(cmdDelete)
+End Sub
+
+Private Sub cmdDelete_Enter()
+    Call pCheckEmployeeAccess("deleteRecords")
+End Sub
+
+Private Sub cmdEdit_Click()
+    Call selectButton(cmdEdit)
+End Sub
+
+Private Sub cmdEdit_Enter()
+    Call pCheckEmployeeAccess("editRecords")
+End Sub
+
+Private Sub cmdProfit_Click()
+    Call selectButton(cmdProfit)
+End Sub
+
+Private Sub cmdProfit_Enter()
+    Call pCheckEmployeeAccess("buttonProfit")
+End Sub
+
+Private Sub cmdRefresh_Click()
+    If Me.salesMainSubform.SourceObject = "" Then
+        Exit Sub
+    End If
+    Me.salesMainSubform.Form.Requery
+End Sub
+
+Private Sub cmdSalesByDate_Click()
+    Call selectButton(cmdSalesByDate)
+End Sub
+
+Private Sub cmdSalesByDate_Enter()
+    Call pCheckEmployeeAccess("printReports")
+End Sub
+
+Private Sub cmdView_Click()
+    Call selectButton(cmdView)
+End Sub
+
+Private Sub cmdView_Enter()
+    Call pCheckEmployeeAccess("viewRecords")
+End Sub
+
+Private Sub cmdWithCustomerId_Click()
+    Call selectButton(cmdWithCustomerId)
+End Sub
+
+Private Sub cmdWithCustomerId_Enter()
+    Call pCheckEmployeeAccess("printInvoice")
+End Sub
+
+Private Sub cmdWithoutCustomerId_Click()
+    Call selectButton(cmdWithoutCustomerId)
+End Sub
+
+Private Sub cmdWithoutCustomerId_Enter()
+    Call pCheckEmployeeAccess("printInvoice")
+End Sub
