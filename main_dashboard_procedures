@@ -1,0 +1,373 @@
+Option Compare Database
+Option Explicit
+
+'these procedures are attached to click events on various buttons on the main dashboard of the maxxy database.
+
+Private Sub cmdAbout_Click()
+    'show the about form when the cmdAbout button is clicked
+    DoCmd.OpenForm "About"
+End Sub
+
+Private Sub cmdAddCategoryShortCut_Click()
+    DoCmd.OpenForm "AddNewCategoriesForm"
+End Sub
+
+Private Sub cmdAddCategoryShortCut_Enter()
+    Call pCheckEmployeeAccess("addRecords")
+End Sub
+
+Private Sub cmdAddCustomerShortCut_Click()
+    DoCmd.OpenForm "AddCustomersFormShortCut"
+End Sub
+
+Private Sub cmdAddCustomerShortCut_Enter()
+    Call pCheckEmployeeAccess("addRecords")
+End Sub
+
+Private Sub cmdAddDepositShortCut_Click()
+    DoCmd.OpenForm "AddNewDepositsPopUpForm"
+End Sub
+
+Private Sub cmdAddDepositShortCut_Enter()
+    Call pCheckEmployeeAccess("addRecords")
+End Sub
+
+Private Sub cmdAddEmployeeShortCut_Click()
+    DoCmd.OpenForm "AddEmployeeFormShortCut"
+End Sub
+
+Private Sub cmdAddEmployeeShortCut_Enter()
+    Call pCheckEmployeeAccess("addRecords")
+End Sub
+
+Private Sub cmdAddProductsShortCut_Click()
+    DoCmd.OpenForm "AddNewproductsForm"
+End Sub
+
+Private Sub cmdAddProductsShortCut_Enter()
+    Call pCheckEmployeeAccess("addRecords")
+End Sub
+
+Private Sub cmdAddRepairShortCut_Click()
+    DoCmd.OpenForm "AddNewRepairsForm"
+End Sub
+
+Private Sub cmdAddRepairShortCut_Enter()
+    Call pCheckEmployeeAccess("addRecords")
+End Sub
+
+Private Sub cmdAddSalesShortCut_Click()
+    DoCmd.OpenForm "AddNewSalesForm"
+End Sub
+
+Private Sub cmdAddSalesShortCut_Enter()
+    Call pCheckEmployeeAccess("addRecords")
+End Sub
+
+Private Sub cmdAddSupplierShortCut_Click()
+    DoCmd.OpenForm "AddSuppliersFormShortCut"
+End Sub
+
+Private Sub cmdAddSupplierShortCut_Enter()
+    Call pCheckEmployeeAccess("addRecords")
+End Sub
+
+Private Sub cmdBackUp_Click()
+    Dim myTarget As String, myDesignation As String
+    myTarget = "C:\Users\DELL\Desktop\Academics\backUpFiles_On_"
+    myDesignation = "C:\Users\DELL\Desktop\Academics"
+    Call backUpDatabase(CurrentDb.Name, myTarget, myDesignation)
+End Sub
+
+Private Sub cmdHelp_Click()
+    'Open the Help form based on the active NavigationButton
+    
+    Dim navigationFormSourceObject As String
+    
+    navigationFormSourceObject = Me.NavigationSubform.SourceObject
+    
+    Select Case navigationFormSourceObject
+    Case "PRODUCTS"
+        DoCmd.OpenForm "Help Products"
+    Case "SALES"
+        DoCmd.OpenForm "Help Sales"
+    Case "CUSTOMERS"
+        DoCmd.OpenForm "Help Customers"
+    Case "EXPENSES"
+        DoCmd.OpenForm "Help Expenses"
+    Case "DEPOSITS"
+        DoCmd.OpenForm "Help Deposits"
+    Case "DAMAGES"
+        DoCmd.OpenForm "Help Damages"
+    Case "EMPLOYEES"
+        DoCmd.OpenForm "Help Employees"
+    Case "ATTENDANCE"
+        DoCmd.OpenForm "Help Attendance"
+    Case "SALARY"
+        DoCmd.OpenForm "Help Salary"
+    Case "REPAIRS"
+        DoCmd.OpenForm "Help Repairs"
+    Case "RETAILERS"
+        DoCmd.OpenForm "Help Retailers"
+    Case "SUPPLIERS"
+        DoCmd.OpenForm "Help Suppliers"
+    Case Else
+        MsgBox "Please click on the button you want to get help on.", vbOKOnly + vbInformation, "Invalid Help Search"
+    End Select
+End Sub
+
+Private Sub cmdInventory_Click()
+    DoCmd.OpenForm "Inventory Preparatory"
+End Sub
+
+Private Sub cmdInventory_Enter()
+    Call pCheckEmployeeAccess("viewInventory")
+End Sub
+
+Private Sub cmdLogout_Click()
+    DoCmd.OpenForm "Splash Form"
+    DoCmd.Close acForm, "Main Dashboard", acSaveNo
+End Sub
+
+Private Sub cmdGotoPage2_Click()
+    Dim ctrl As Control
+    For Each ctrl In Me.Controls
+        If ctrl.Tag = "page2" Then
+            With ctrl
+                .Visible = True
+            End With
+        ElseIf ctrl.Tag = "page1" Then
+            With ctrl
+                .Visible = False
+            End With
+        End If
+    Next
+    
+    Me.cmdGotoPage2.Enabled = False
+    Me.cmdGotoPage1.Enabled = True
+End Sub
+
+Private Sub cmdGotoPage1_Click()
+    Dim ctrl As Control
+    For Each ctrl In Me.Controls
+        If ctrl.Tag = "page2" Then
+            With ctrl
+                .Visible = False
+            End With
+        ElseIf ctrl.Tag = "page1" Then
+            With ctrl
+                .Visible = True
+            End With
+        End If
+    Next
+    
+    Me.cmdGotoPage1.Enabled = False
+    Me.cmdGotoPage2.Enabled = True
+End Sub
+
+Private Sub cmdMarkAttendanceShortCut_Click()
+    DoCmd.OpenForm "MarkAttendanceFormShortCut"
+End Sub
+
+Private Sub cmdMarkAttendanceShortCut_Enter()
+    Call pCheckEmployeeAccess("addRecords")
+End Sub
+
+Private Sub cmdPayDepositShortCut_Click()
+    DoCmd.OpenForm "PayBalanceForm"
+End Sub
+
+Private Sub cmdPayDepositShortCut_Enter()
+    Call pCheckEmployeeAccess("addRecords")
+End Sub
+
+Private Sub cmdPaySalaryShortCut_Click()
+    DoCmd.OpenForm "PaySalaryFormShortCut"
+End Sub
+
+Private Sub cmdPaySalaryShortCut_Enter()
+    Call pCheckEmployeeAccess("addRecords")
+End Sub
+
+Private Sub cmdPrintCustomerSlipShortCut_Click()
+    DoCmd.OpenForm "PrintCustomerSlipShortCut"
+End Sub
+
+Private Sub cmdPrintCustomerSlipShortCut_Enter()
+    Call pCheckEmployeeAccess("printReports")
+End Sub
+
+Private Sub cmdPrintInvoiceShortCut_Click()
+    DoCmd.OpenForm "WithCustomerIdFormShortCut"
+End Sub
+
+Private Sub cmdPrintInvoiceShortCut_Enter()
+    Call pCheckEmployeeAccess("printInvoice")
+End Sub
+
+Private Sub cmdQuickStart_Click()
+    DoCmd.OpenForm "QuickStartAddCompanyDetails"
+End Sub
+
+Private Sub cmdQuitDatabase_Click()
+    Dim response As String
+    response = MsgBox("This action will close the application." _
+    & Chr(13) & "Do you wish to continue?", vbYesNo + vbQuestion + vbDefaultButton2, "Quit Application")
+    If response = vbNo Then
+        Exit Sub
+    Else
+        'calling docmd.quit saves selected checkboxes in the reports
+        'to prevent this,open splash form
+        'splash form has a code that will open the login form in a hidden state
+        'then the nextline of code will close the main dashboard and save no changes in it
+        ' while the following line of code will quit the database
+        
+        DoCmd.OpenForm "Splash Form"
+        DoCmd.Close acForm, "Main Dashboard", acSaveNo
+        DoCmd.Quit
+    End If
+End Sub
+
+Private Sub cmdResetEmployeePrivileges_Click()
+    'On Error GoTo errorHandler
+    
+    'declare variables
+    Dim strUser As String, strSql As String
+    Dim db As DAO.Database, rs As DAO.Recordset
+    
+    'assign the value of the temporary variable to another variable
+    strUser = Nz(TempVars![employeeDesignation].Value, "No Designation")
+    
+    'if the user designation is not manager, alert the user and disable the button and exit sub
+    If strUser <> "Manager" Then
+        MsgBox "You are not authorized to use this feature.", vbInformation, "Access Denied"
+        Me.cmdResetEmployeePrivileges.Enabled = False
+        Exit Sub
+    Else
+    
+        'assign a value to strSql
+        strSql = "SELECT viewSettings FROM [tblPrivileges] WHERE designation ='" & strUser & "';"
+        
+        'set values to DAO variables
+        Set db = CurrentDb
+        Set rs = db.OpenRecordset(strSql, dbOpenDynaset)
+        
+        'if the user has access to the settings button, inform him and exit sub
+        If rs![viewSettings] = True Then
+            MsgBox "You can only use this feature if you," & Chr(13) & _
+            "as the Manager of this company," & Chr(13) & _
+            "were denied access to the Settings of this App.", vbInformation, "Information"
+            Exit Sub
+        End If
+        
+        'edit the viewSettings
+        With rs
+            .Edit
+            ![viewSettings] = True
+            .Update
+        End With
+        
+        'close the database
+        rs.Close
+        db.Close
+        Set rs = Nothing
+        Set db = Nothing
+        
+        'enable the Settings button and Inform the user
+        Me.cmdSettings.Enabled = True
+        
+        MsgBox "You have been granted access to the Settings of this Application." & Chr(13) & _
+        "You can reset the Application now.", vbInformation, "Access Granted"
+        
+    End If
+'errorHandler:
+    'Exit Sub
+End Sub
+
+Private Sub cmdRetailSalesShortCut_Click()
+    DoCmd.OpenForm "AddNewRetailSalesForm"
+End Sub
+
+Private Sub cmdRetailSalesShortCut_Enter()
+    Call pCheckEmployeeAccess("addRecords")
+End Sub
+
+Private Sub cmdSalarySlipShortCut_Click()
+    DoCmd.OpenForm "PrintSalaryFormShortCut"
+End Sub
+
+Private Sub cmdSalarySlipShortCut_Enter()
+    Call pCheckEmployeeAccess("printReports")
+End Sub
+
+Private Sub cmdSettings_Click()
+    DoCmd.OpenForm "Settings"
+End Sub
+
+Private Sub cmdSettings_Enter()
+    Call pCheckEmployeeAccess("viewSettings")
+End Sub
+
+Private Sub cmdSupplierSlipShortCut_Click()
+    DoCmd.OpenForm "PrintSuppliersFormShortCut"
+End Sub
+
+Private Sub cmdSupplierSlipShortCut_Enter()
+    Call pCheckEmployeeAccess("printReports")
+End Sub
+
+Private Sub Form_Load()
+    'On Error GoTo errorHandler:
+    'DoCmd.ShowToolbar "Ribbon", acToolbarNo
+    'DoCmd.Maximize
+'errorHandler:
+    'Exit Sub
+End Sub
+
+Private Sub NavigationButton53_Enter()
+    Call pCheckEmployeeAccess("buttonProducts")
+End Sub
+
+Private Sub NavigationButton55_Enter()
+    Call pCheckEmployeeAccess("buttonSales")
+End Sub
+
+Private Sub NavigationButton57_Enter()
+    Call pCheckEmployeeAccess("buttonDeposits")
+End Sub
+
+Private Sub NavigationButton59_Enter()
+    Call pCheckEmployeeAccess("buttonSuppliers")
+End Sub
+
+Private Sub NavigationButton61_Enter()
+    Call pCheckEmployeeAccess("buttonCustomers")
+End Sub
+
+Private Sub NavigationButton63_Enter()
+    Call pCheckEmployeeAccess("buttonExpenses")
+End Sub
+
+Private Sub NavigationButton65_Enter()
+    Call pCheckEmployeeAccess("buttonDamages")
+End Sub
+
+Private Sub NavigationButton67_Enter()
+    Call pCheckEmployeeAccess("buttonEmployees")
+End Sub
+
+Private Sub NavigationButton69_Enter()
+    Call pCheckEmployeeAccess("buttonAttendance")
+End Sub
+
+Private Sub NavigationButton71_Enter()
+    Call pCheckEmployeeAccess("buttonSalary")
+End Sub
+
+Private Sub NavigationButton77_Enter()
+    Call pCheckEmployeeAccess("buttonRetailers")
+End Sub
+
+Private Sub NavigationButton81_Enter()
+    Call pCheckEmployeeAccess("buttonRepairs")
+End Sub
