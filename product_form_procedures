@@ -1,0 +1,144 @@
+Option Compare Database
+Option Explicit
+Public Sub selectButton(ctrl As Control)
+        'this sub checks the caption of a button and determines which form should be opened as the main sub_form using case condition
+        Dim frmName As String
+        Dim frmCaption As String
+  
+         Select Case ctrl.Caption
+            Case "   Add New" 'Add new products
+                frmName = "AddProductsSubform"
+            Case "  Edit"      'Edit products
+                frmName = "EditProductsForm"
+            Case "  Delete"      'delete products
+                frmName = "DeleteProductsForm"
+            Case "  Creditors"      'Show creditors
+                frmName = "Creditors Form"
+            Case "  View"      'view products
+                frmName = "ViewProductsForm"
+            Case "  By Purchased Date"      'Delete products
+                frmName = "PurchasedDateForm"
+            Case "  By Product Model"      'Product Name Report
+                frmName = "ProductModelForm"
+            Case "  View By Suppliers"      'Suppliers Name Report
+                frmName = "SupplierNameForm"
+            Case "  Add New Categories"      'Add new categories
+                frmName = "AddCategoriesSubform"
+            Case "  Edit Categories"      'edit categories
+                frmName = "EditCategoriesForm"
+            Case "  Print|View Categories"      'View or print categories
+                frmName = "PrintCategoriesForm"
+        End Select
+        
+        Me!productsMainSubform.SourceObject = frmName
+        
+        'if the button has a tag of product, attach Product to its name, otherwise, attach Report to its name.
+        If ctrl.Tag = "product" Then
+            Me.mainLbl.Caption = ctrl.Caption & " " & "(Products)"
+        ElseIf ctrl.Tag = "report" Then
+            Me.mainLbl.Caption = ctrl.Caption & " " & "(Report)"
+        ElseIf ctrl.Tag = "category" Then
+            Me.mainLbl.Caption = ctrl.Caption
+        End If
+        'refresh the sub_form and set focus on it.
+        Me.Refresh
+        Me.productsMainSubform.SetFocus
+        
+End Sub
+
+Private Sub cmdAddNew_Click()
+    DoCmd.OpenForm "AddNewProductsForm"
+    Call selectButton(cmdAddNew)
+End Sub
+
+Private Sub cmdAddNew_Enter()
+    Call pCheckEmployeeAccess("addRecords")
+End Sub
+
+Private Sub cmdCreditors_Click()
+    Call selectButton(cmdCreditors)
+End Sub
+
+Private Sub cmdCreditors_Enter()
+    Call pCheckEmployeeAccess("viewCreditors")
+End Sub
+
+Private Sub cmdDelete_Click()
+    Call selectButton(cmdDelete)
+End Sub
+
+Private Sub cmdDelete_Enter()
+    Call pCheckEmployeeAccess("deleteRecords")
+End Sub
+
+Private Sub cmdEdit_Click()
+    Call selectButton(cmdEdit)
+End Sub
+
+Private Sub cmdEdit_Enter()
+    Call pCheckEmployeeAccess("editRecords")
+End Sub
+
+Private Sub cmdEditCategory_Click()
+    Call selectButton(cmdEditCategory)
+End Sub
+
+Private Sub cmdEditCategory_Enter()
+    Call pCheckEmployeeAccess("editRecords")
+End Sub
+
+Private Sub cmdNewCategory_Click()
+    Call selectButton(cmdNewCategory)
+    DoCmd.OpenForm "AddNewCategoriesForm"
+End Sub
+
+Private Sub cmdNewCategory_Enter()
+    Call pCheckEmployeeAccess("addRecords")
+End Sub
+
+Private Sub cmdPrintOrViewCategory_Click()
+    Call selectButton(cmdPrintOrViewCategory)
+End Sub
+
+Private Sub cmdPrintOrViewCategory_Enter()
+    Call pCheckEmployeeAccess("printReports")
+End Sub
+
+Private Sub cmdProductModel_Click()
+    Call selectButton(cmdProductModel)
+End Sub
+
+Private Sub cmdProductModel_Enter()
+    Call pCheckEmployeeAccess("printReports")
+End Sub
+
+Private Sub cmdPurchasedDate_Click()
+    Call selectButton(cmdPurchasedDate)
+End Sub
+
+Private Sub cmdPurchasedDate_Enter()
+    Call pCheckEmployeeAccess("printReports")
+End Sub
+
+Private Sub cmdRefresh_Click()
+    If Me.productsMainSubform.SourceObject = "" Then
+        Exit Sub
+    End If
+    Me.productsMainSubform.Form.Requery
+End Sub
+
+Private Sub cmdSuppliers_Click()
+    Call selectButton(cmdSuppliers)
+End Sub
+
+Private Sub cmdSuppliers_Enter()
+    Call pCheckEmployeeAccess("printReports")
+End Sub
+
+Private Sub cmdView_Click()
+    Call selectButton(cmdView)
+End Sub
+
+Private Sub cmdView_Enter()
+    Call pCheckEmployeeAccess("viewRecords")
+End Sub
